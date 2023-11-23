@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="he">
+<head>
+    <title>Message Generator</title>
+    <script src="index.js"></script>
+</head>
+<meta charset="utf-8">
+<body>
+    <label for="neededAction">בחר את האיום:</label>
+<select name="neededAction" id="neededAction">
+  <option value="goToShalterRoket">טילים</option>
+  <option value="terroristInfiltration">חדירת מחבלים</option>
+  <option value="goToShalterAntiTank">נ"ט</option>
+  <option value="hostileAircraft">כלי טיס עוין</option>
+</select>
+    <input id="givenMessage", type="text", value="הדבק כאן את ההודעה שברצונך להעביר לתושבים">
+    <button id="generateMessageButton">צור הודעה מלאה</button>
+    <p id="messageStatus">לחץ על 'צור הודעה' ליצירה והעתקתה</p>
+
+</html>
