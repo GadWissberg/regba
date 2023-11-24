@@ -27,29 +27,43 @@ const actionToRepresentation = {
 
 document
   .getElementById("generateMessageButton")
-  .addEventListener("click", function () {
+  .addEventListener("click", async function () {
     const neededAction = document.getElementById("neededAction").value;
     const givenMessage = document.getElementById("givenMessage").value;
     const actionInfo = actionToRepresentation[neededAction];
     // Copy the text inside the text field
-    navigator.clipboard.writeText(genMessage(actionInfo, givenMessage));
+    navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
     document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
   });
 
-function genMessage(actionInfo, givenMessage) {
+async function genMessage(actionInfo, givenMessage) {
   return `
 --- ${actionInfo.icon} ---
 ${actionInfo.hebrew}
 ${givenMessage}
 
 -- more languages -- 
-${actionInfo.thai} - ${genTranslateUrl("th", givenMessage)}
-${actionInfo.russian} - ${genTranslateUrl("ru", givenMessage)}
+${actionInfo.thai} - ${await genTranslateUrl("th", givenMessage)}
+${actionInfo.russian} - ${await genTranslateUrl("ru", givenMessage)}
 `;
 }
 
 function genTranslateUrl(language, message) {
-  return `https://translate.google.co.il/?sl=iw&tl=${language}&text=${encodeURIComponent(
+  const translateUrl = `https://translate.google.co.il/?sl=iw&tl=${language}&text=${encodeURIComponent(
     message
   )}`;
+
+  return shortenUrl(translateUrl)
+}
+
+async function shortenUrl(longUrl) {
+  const apiUrl = `http://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    return response.text();
+  } catch (error) {
+    console.error('Error shortening URL:', error);
+    return longUrl;
+  }
 }
