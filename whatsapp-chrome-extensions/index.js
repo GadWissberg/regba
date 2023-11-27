@@ -46,39 +46,43 @@ const actionToRepresentation = {
   },
 };
 
-document
-  .getElementById("generateMessageButton")
-  .addEventListener("click", async function () {
-    const neededAction = document.getElementById("neededAction").value;
-    const givenMessage = document.getElementById("givenMessage").value;
-    const actionInfo = actionToRepresentation[neededAction];
-    // Copy the text inside the text field
-    navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
-    document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
-  });
+function initializeSelectOptions() {
+  const selectElement = document.getElementById("neededAction");
 
-// on change of select, update the text area
-document.getElementById("neededAction").addEventListener("change", function () {
-    const neededAction = document.getElementById("neededAction").value;
+  Object.keys(actionToRepresentation).forEach((action, index) => {
+    const option = document.createElement("option");
+    const { icon, hebrew, description } = actionToRepresentation[action];
+
+    option.value = action;
+    option.innerHTML = `${hebrew} ${icon}`;
+    selectElement.appendChild(option);
+
+    // Initialize the textarea with the description message only for the first option
+    if (index === 0) {
+      document.getElementById("givenMessage").value = description;
+    }
+  });
+}
+
+function updateTextAreaOnSelectChange() {
+  const selectElement = document.getElementById("neededAction");
+
+  selectElement.addEventListener("change", function () {
+    const neededAction = selectElement.value;
     const actionInfo = actionToRepresentation[neededAction];
     document.getElementById("givenMessage").value = actionInfo.description;
-});
+  });
+}
 
-Object.keys(actionToRepresentation).forEach((action, index) => {
-  const option = document.createElement("option");
-  const icon = actionToRepresentation[action].icon;
-  const hebrew = actionToRepresentation[action].hebrew;
-  const description = actionToRepresentation[action].description;
+async function generateMessage() {
+  const neededAction = document.getElementById("neededAction").value;
+  const givenMessage = document.getElementById("givenMessage").value;
+  const actionInfo = actionToRepresentation[neededAction];
 
-  option.value = action;
-  option.innerHTML = hebrew + " " + icon;
-  document.getElementById("neededAction").appendChild(option);
-
-  // Initialize the textarea with the description message only for the first option
-  if (index === 0) {
-    document.getElementById("givenMessage").value = description;
-  }
-});
+  // Copy the text inside the text field
+  navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
+  document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
+}
 
 async function genMessage(actionInfo, givenMessage) {
   return `
@@ -93,11 +97,9 @@ ${actionInfo.russian} - ${await genTranslateUrl("ru", givenMessage)}
 }
 
 function genTranslateUrl(language, message) {
-  const translateUrl = `https://translate.google.co.il/?sl=iw&tl=${language}&text=${encodeURIComponent(
-    message
-  )}`;
+  const translateUrl = `https://translate.google.co.il/?sl=iw&tl=${language}&text=${encodeURIComponent(message)}`;
 
-  return shortenUrl(translateUrl)
+  return shortenUrl(translateUrl);
 }
 
 async function shortenUrl(longUrl) {
@@ -111,3 +113,10 @@ async function shortenUrl(longUrl) {
     return longUrl;
   }
 }
+
+// Event listeners
+document.getElementById("generateMessageButton").addEventListener("click", generateMessage);
+
+// Initialization
+initializeSelectOptions();
+updateTextAreaOnSelectChange();
