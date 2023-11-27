@@ -1,20 +1,66 @@
-<!doctype html>
-<html lang="he">
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 <head>
-    <title>Message Generator</title>
-    <script src="index.js" defer></script>
-</head>
-<meta charset="utf-8">
-<body>
-    <label for="neededAction">בחר את האיום:</label>
-<select name="neededAction" id="neededAction">
-  <option value="goToShalterRoket">טילים</option>
-  <option value="terroristInfiltration">חדירת מחבלים</option>
-  <option value="goToShalterAntiTank">נ"ט</option>
-  <option value="hostileAircraft">כלי טיס עוין</option>
-</select>
-    <input id="givenMessage", type="text", value="הדבק כאן את ההודעה שברצונך להעביר לתושבים">
-    <button id="generateMessageButton">צור הודעה מלאה</button>
-    <p id="messageStatus">לחץ על 'צור הודעה' ליצירה והעתקתה</p>
+    <title>הודעה אזרחית</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            background-color: #f2f2f2;
+            color: #000;
+            font-family: sans-serif;
+            font-size: 16px;
+        }
 
+        label {
+            font-weight: bold;
+            color: #000;
+        }
+
+        select {
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            font-size: 18px;
+        }
+
+        #givenMessage {
+            height: 350px;
+            width: 600px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            font-size: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #000;
+            border: none;
+            cursor: pointer;
+        }
+
+        h1 {
+            text-align: center;
+            color: #000;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>הודעות חמ״ל</h1>
+<label for="neededAction">בחר את האיום:</label>
+<select name="neededAction" id="neededAction">
+</select>
+<textarea id="givenMessage">הדבק כאן את ההודעה שברצונך להעביר לתושבים</textarea>
+<button id="generateMessageButton">צור הודעה מלאה</button>
+<p id="messageStatus">לחץ על 'צור הודעה' ליצירה והעתקתה</p>
+
+<script src="index.js" defer></script>
+</body>
 </html>
