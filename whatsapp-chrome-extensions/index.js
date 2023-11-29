@@ -117,6 +117,9 @@ async function shortenUrl(longUrl) {
 }
 
 async function copyDefaultTextToClipboard() {
+
+  // It seems the clipboard API doesn't allow to copy text on initialization (action denied). So I had to use this hack.
+
   const ta = document.createElement('textarea');
   ta.style.cssText = 'opacity:0; position:fixed; width:1px; height:1px; top:0; left:0;';
   ta.value = await genMessage(defaultMessage, defaultMessage.description);
