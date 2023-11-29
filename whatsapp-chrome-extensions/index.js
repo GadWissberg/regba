@@ -76,10 +76,8 @@ function updateTextAreaOnSelectChange() {
   });
 }
 
-async function generateMessage(neededAction) {
-    if (!neededAction) {
-        neededAction = document.getElementById("neededAction").value;
-    }
+async function generateMessage() {
+    const neededAction = document.getElementById("neededAction").value;
     const givenMessage = document.getElementById("givenMessage").value;
     const actionInfo = actionToRepresentation[neededAction];
 
@@ -118,18 +116,22 @@ async function shortenUrl(longUrl) {
   }
 }
 
+async function copyDefaultTextToClipboard() {
+  const ta = document.createElement('textarea');
+  ta.style.cssText = 'opacity:0; position:fixed; width:1px; height:1px; top:0; left:0;';
+  ta.value = await genMessage(defaultMessage, defaultMessage.description);
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  document.execCommand('copy');
+  ta.remove();
+}
+
 // Event listeners
 document.getElementById("generateMessageButton").addEventListener("click", generateMessage);
 
-async function copyDefaultToClipboard() {
-    navigator.clipboard.writeText(await genMessage(defaultMessage, defaultMessage.description))
-}
-
 // Initialization
-copyDefaultToClipboard();
-// chrome.runtime.onStartup.addListener(function() {
-//
-// })
 // Usage example
+copyDefaultTextToClipboard();
 initializeSelectOptions();
 updateTextAreaOnSelectChange();
