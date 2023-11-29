@@ -46,6 +46,8 @@ const actionToRepresentation = {
   },
 };
 
+const defaultMessage = actionToRepresentation.goToShelter
+
 function initializeSelectOptions() {
   const selectElement = document.getElementById("neededAction");
 
@@ -74,14 +76,16 @@ function updateTextAreaOnSelectChange() {
   });
 }
 
-async function generateMessage() {
-  const neededAction = document.getElementById("neededAction").value;
-  const givenMessage = document.getElementById("givenMessage").value;
-  const actionInfo = actionToRepresentation[neededAction];
+async function generateMessage(neededAction) {
+    if (!neededAction) {
+        neededAction = document.getElementById("neededAction").value;
+    }
+    const givenMessage = document.getElementById("givenMessage").value;
+    const actionInfo = actionToRepresentation[neededAction];
 
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
-  document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
+    document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
 }
 
 async function genMessage(actionInfo, givenMessage) {
@@ -117,6 +121,15 @@ async function shortenUrl(longUrl) {
 // Event listeners
 document.getElementById("generateMessageButton").addEventListener("click", generateMessage);
 
+async function copyDefaultToClipboard() {
+    navigator.clipboard.writeText(await genMessage(defaultMessage, defaultMessage.description))
+}
+
 // Initialization
+copyDefaultToClipboard();
+// chrome.runtime.onStartup.addListener(function() {
+//
+// })
+// Usage example
 initializeSelectOptions();
 updateTextAreaOnSelectChange();

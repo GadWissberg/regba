@@ -24,7 +24,8 @@
     "scripting",
     "activeTab",
     "storage",
-    "tabs"
+    "tabs",
+    "clipboardWrite"
   ],
   "host_permissions": [
     "https://web.whatsapp.com/*"
