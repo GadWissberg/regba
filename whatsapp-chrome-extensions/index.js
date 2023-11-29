@@ -21,7 +21,7 @@ const actionToRepresentation = {
     description: "ניתן לצאת מן הממ\"דים.\n" +
         "נבקש לעת עתה להישאר בקרבת מרחב מוגן\n",
     russian: "быть в непосредственной близости",
-    thai: "ที่จะอยู่ใกล้กัน",
+    thai: "🇹🇭 ที่จะอยู่ใกล้กัน",
   },
   ShelterOut: {
     icon: "🆓",
@@ -31,7 +31,7 @@ const actionToRepresentation = {
     thai: "คุณสามารถออกจากมิติได้",
   },
   friendlyFire: {
-    icon: "🪖",
+    icon: "❗",
     hebrew: "קולות ירי של כוחותינו",
     description: "קולות הירי הנשמעים כעת הם כתוצאה מירי של צה\"ל. הישוב בשגרה.\n",
     russian: "Выстрелы наших сил",
