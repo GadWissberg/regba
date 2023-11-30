@@ -4,49 +4,65 @@ const actionToRepresentation = {
     hebrew: "חירום - להיכנס לממד",
     description: "נא להיכנס למרחבים מוגנים ולסגור דלתות בתים.\n" +
         "נא להמשיך להישמע להנחיות פיקוד העורף\n",
-    russian: "Чрезвычайная ситуация - введите измерение",
-    thai: "ฉุกเฉิน - เข้ามิติ",
   },
   stayInShelter: {
     icon: "🚨",
     hebrew: "חירום - להישאר בממד",
     description: "יש להמשיך לשהות בממד עד להודעה חדשה.\n" +
         "אין לצאת מהממד ללא הודעה מפורשת של צח\"י\n",
-    russian: "Чрезвычайная ситуация - оставайтесь в измерении",
-    thai: "ช่างซ่อมนาฬิกา-ดูออนไลน์",
   },
   stayNearByShelter: {
     icon: "📢",
-    hebrew: "להיות בקרבת ממד",
+    hebrew: "ניתן לצאת מהממד",
     description: "ניתן לצאת מן הממ\"דים.\n" +
         "נבקש לעת עתה להישאר בקרבת מרחב מוגן\n",
-    russian: "быть в непосредственной близости",
-    thai: "🇹🇭 ที่จะอยู่ใกล้กัน",
   },
   ShelterOut: {
     icon: "🆓",
-    hebrew: "ניתן לצאת מהממד",
+    hebrew: "להיות בקרבת ממד",
     description: "להישאר בקרבת מרחב מוגן",
-    russian: "Вы можете выйти из измерения",
-    thai: "คุณสามารถออกจากมิติได้",
   },
   friendlyFire: {
     icon: "❗",
     hebrew: "קולות ירי של כוחותינו",
     description: "קולות הירי הנשמעים כעת הם כתוצאה מירי של צה\"ל. הישוב בשגרה.\n",
-    russian: "Выстрелы наших сил",
-    thai: "เสียงปืนของกองกำลังของเรา",
   },
   freeText: {
     icon: "❗",
     hebrew: "טקסט חופשי",
     description: "הדבק טקסט חופשי כאן",
-    russian: "обращать внимание",
-    thai: "ใส่ใจ",
+    messageHeader: "שים לב!",
   },
 };
 
-const defaultMessage = actionToRepresentation.goToShelter
+const languageToRepresentation = {
+    russian: {
+        icon: "🇷🇺",
+        key: "ru",
+        actionHeaderTranslation: {
+          goToShelter: "Чрезвычайная ситуация - войти в измерение",
+          stayInShelter: "Чрезвычайная ситуация - оставайтесь в измерении",
+          stayNearByShelter: "быть в непосредственной близости",
+          ShelterOut: "Вы можете выйти из измерения",
+          friendlyFire: "Выстрелы наших сил",
+          freeText: "обращать внимание",
+        }
+    },
+    thai: {
+        icon: "🇹🇭",
+        key: "th",
+        actionHeaderTranslation: {
+          goToShelter: "ฉุกเฉิน - เข้ามิติ",
+          stayInShelter: "ฉุกเฉิน - อยู่ในมิติ",
+          stayNearByShelter: "ที่จะอยู่ใกล้กัน",
+          ShelterOut: "คุณสามารถออกจากมิติได้",
+          friendlyFire: "เสียงปืนของกองกำลังของเรา",
+          freeText: "ใส่ใจ",
+        }
+    }
+}
+
+
 
 function initializeSelectOptions() {
   const selectElement = document.getElementById("neededAction");
@@ -82,19 +98,32 @@ async function generateMessage() {
     const actionInfo = actionToRepresentation[neededAction];
 
     // Copy the text inside the text field
-    navigator.clipboard.writeText(await genMessage(actionInfo, givenMessage));
+    await navigator.clipboard.writeText(await genMessage(neededAction, actionInfo, givenMessage));
     document.getElementById("messageStatus").innerHTML = "ההודעה נוצרה";
+
+    setTimeout(() => {
+        document.getElementById("messageStatus").innerHTML = "לחץ על 'צור והעתק' ליצירת ההודעה המלאה והעתקתה";
+    }, 3000);
 }
 
-async function genMessage(actionInfo, givenMessage) {
+async function genMessage(neededAction ,actionInfo, givenMessage) {
+
+    let translatedMessage = "";
+    let header = actionInfo.messageHeader ? actionInfo.messageHeader : actionInfo.hebrew;
+
+    for (const language in languageToRepresentation) {
+        const languageInfo = languageToRepresentation[language];
+        const actionHeaderTranslation = languageInfo.actionHeaderTranslation[neededAction];
+        translatedMessage += ` ${actionHeaderTranslation} ${await genTranslateUrl(languageInfo.key, givenMessage)} ${languageInfo.icon} \n`;
+    }
+
   return `
 --- ${actionInfo.icon} ---
-${actionInfo.hebrew}
+${header}
 ${givenMessage}
 
 -- more languages -- 
-${actionInfo.thai} - ${await genTranslateUrl("th", givenMessage)}
-${actionInfo.russian} - ${await genTranslateUrl("ru", givenMessage)}
+${translatedMessage}
 `;
 }
 
@@ -116,18 +145,43 @@ async function shortenUrl(longUrl) {
   }
 }
 
+async function copyTextToClipboard(text) {
+
+    // hack to copy to clipboard
+
+    try {
+        const tempInput = document.createElement("textarea");
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+
+        // Focus on the temporary input element
+        tempInput.focus();
+        tempInput.select();
+
+        // Use document.execCommand to copy to clipboard
+        document.execCommand("copy");
+
+        // Remove the temporary input element
+        document.body.removeChild(tempInput);
+    } catch (error) {
+        throw new Error("Error copying to clipboard: " + error.message);
+    }
+}
+
 async function copyDefaultTextToClipboard() {
+    try {
+        const defaultText = await genMessage("goToShelter", actionToRepresentation.goToShelter, actionToRepresentation.goToShelter.description);
 
-  // It seems the clipboard API doesn't allow to copy text on initialization (action denied). So I had to use this hack.
+        await copyTextToClipboard(defaultText);
 
-  const ta = document.createElement('textarea');
-  ta.style.cssText = 'opacity:0; position:fixed; width:1px; height:1px; top:0; left:0;';
-  ta.value = await genMessage(defaultMessage, defaultMessage.description);
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  document.execCommand('copy');
-  ta.remove();
+        document.getElementById("messageStatus").innerHTML = "ההודעה דיפולטיבית נוצרה";
+
+        setTimeout(() => {
+            document.getElementById("messageStatus").innerHTML = "לחץ על 'צור והעתק' ליצירת ההודעה המלאה והעתקתה";
+        }, 1000);
+    } catch (error) {
+        console.error(error.message);
+    }
 }
 
 // Event listeners
