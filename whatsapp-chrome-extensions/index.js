@@ -125,6 +125,7 @@ const languageToRepresentation = {
   },
 };
 
+const generateMessageButton = document.getElementById("generateMessageButton")
 function initializeSelectOptions() {
   const selectElement = document.getElementById("neededAction");
 
@@ -165,10 +166,9 @@ async function generateMessage() {
 
   document.getElementById("messageStatus").innerHTML =
   "ההודעה הועתקה";
-
   setTimeout(() => {
     document.getElementById("messageStatus").innerHTML =
-      "לחץ על 'צור והעתק' ליצירת הודעה אחרת והעתקתה";
+      "בחר אופציה ולחץ על 'צור והעתק' ליצירת הודעה אחרת והעתקתה";
   }, 5000);
 
 }
