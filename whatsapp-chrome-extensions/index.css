@@ -19,8 +19,8 @@ select {
 }
 
 #givenMessage {
-    height: 350px;
-    width: 600px;
+    height: 200px;
+    width: 500px;
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 5px;
@@ -30,13 +30,18 @@ select {
 
 button {
     width: 100%;
-    padding: 10px;
-    font-size: 18px;
+    height: 40px;
+    font-size: 30px;
     font-weight: bold;
     color: #fff;
-    background-color: #000;
+    background-color: #ff0000;
     border: none;
     cursor: pointer;
+}
+
+button:hover {
+    background-color: #00ff15;
+
 }
 
 h1 {
