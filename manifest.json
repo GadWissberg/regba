@@ -3,7 +3,7 @@
 
   "name": "Translate Messages Hamal",
   "description": "Translate hamal messages to all users",
-  "version": "1.0.2",
+  "version": "1.0",
 
   "icons": {
     "128": "./icons/il-square-128.png",
